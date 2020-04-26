@@ -1,0 +1,9 @@
+# Intellij
+.idea/
+*.iws
+*.ipr
+*.iml
+
+iot-api-poller/project/project
+**/target
+**/.DS_Store
