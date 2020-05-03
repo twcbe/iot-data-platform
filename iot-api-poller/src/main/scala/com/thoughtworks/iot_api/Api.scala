@@ -7,6 +7,14 @@ import play.api.libs.json.{JsValue, Json}
 import scalaj.http.{Http, HttpResponse}
 
 class Api(serverUri: String, httpClient: HttpClient) {
+  def getRoomActivitiesByIndriyaId(id: String): Option[JsValue] = {
+    val httpResponse = httpClient.get(s"$serverUri/api/RoomActivity/activities/indriya/$id")
+    getRespBodyOnSuccess(httpResponse) match {
+      case Some(res) => Some(Json.obj("indriyaId" -> id, "activities" -> res))
+      case other => other
+    }
+  }
+
   def getMeetingRoomsInOffice(officeName: String): Option[JsValue] = {
     val httpResponse = httpClient.get(s"$serverUri/api/MeetingRoom/offices/$officeName/rooms")
     getRespBodyOnSuccess(httpResponse)
