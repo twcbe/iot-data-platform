@@ -1,10 +1,22 @@
 package com.thoughtworks.iot_api
 
+import play.api.libs.json.{JsNull, JsValue}
+
+import scala.collection.mutable.ArrayBuffer
+
 class Poller(iotApi: Api) {
 
   def pollAndPublish(): Unit = {
     val cbeRooms = iotApi.getMeetingRoomsInOffice("Coimbatore")
-    println(cbeRooms)
+    val indriyaIds: ArrayBuffer[JsValue] = cbeRooms match {
+      case Some(rooms) => (rooms \\ "indriyaId").asInstanceOf[ArrayBuffer[JsValue]]
+      case _ => ArrayBuffer()
+    }
+    indriyaIds.filter(id => id != JsNull)
+      .map(id => iotApi.getRoomActivitiesByIndriyaId(id.as[String]))
+        .map(_.getOrElse(""))
+        .filter(_ != "")
+        .foreach(println(_)) //TODO publish to Pulsar topic
   }
 }
 
