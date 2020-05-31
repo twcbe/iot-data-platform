@@ -18,6 +18,10 @@ class Configuration {
     envOrDefault("API_BASE_URL", "http://localhost:8080")
   }
 
+  def pulsarUrl(): String = {
+    envOrDefault("PULSAR_URL", "pulsar://localhost:6650")
+  }
+
   private def envOrDefault(key: String, default: String): String = {
     getenv(key).getOrElse(default)
   }
